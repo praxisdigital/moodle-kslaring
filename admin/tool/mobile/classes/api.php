@@ -382,12 +382,12 @@ class api {
     public static function get_qrlogin_key() {
         global $USER;
         // Delete previous keys.
-        delete_user_key('tool_mobile', $USER->id);
+        delete_user_key('tool_mobile/qrlogin', $USER->id);
 
         // Create a new key.
         $iprestriction = getremoteaddr(null);
         $validuntil = time() + self::LOGIN_QR_KEY_TTL;
-        return create_user_key('tool_mobile', $USER->id, null, $iprestriction, $validuntil);
+        return create_user_key('tool_mobile/qrlogin', $USER->id, null, $iprestriction, $validuntil);
     }
 
     /**
