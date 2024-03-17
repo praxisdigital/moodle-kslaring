@@ -79,6 +79,8 @@ trait eventtype {
             $mform->addElement('hidden', 'eventtype');
             $mform->setType('eventtype', PARAM_TEXT);
             $mform->setDefault('eventtype', 'user');
+            $mform->hardFreeze('eventtype');
+            $mform->setConstant('eventtype', 'user');
 
             // Render a static element to tell the user what type of event will
             // be created.
