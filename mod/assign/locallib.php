@@ -9290,13 +9290,10 @@ class assign {
                 // If the sesskey is not valid, then display the error notice.
                 $o .= $this->get_renderer()->notification(get_string('invalidsesskey', 'error'), 'notifyerror');
             }
-            $url = new moodle_url(
-                url: '/mod/assign/view.php',
-                params: [
-                    'id' => $this->get_course_module()->id,
-                    'action' => 'grading',
-                ],
-            );
+            $url = new moodle_url('/mod/assign/view.php', [
+                'id' => $this->get_course_module()->id,
+                'action' => 'grading',
+            ]);
             $o .= $this->get_renderer()->continue_button($url);
         } else {
             // Ask for confirmation.
