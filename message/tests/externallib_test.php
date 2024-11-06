@@ -124,7 +124,7 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
         $sentmessages = core_message_external::send_instant_messages($messages);
         $sentmessages = external_api::clean_returnvalue(core_message_external::send_instant_messages_returns(), $sentmessages);
         $this->assertEquals(
-            get_string('usercantbemessaged', 'message', fullname(\core_user::get_user($message1['touserid']))),
+            get_string('usercantbemessaged', 'message'),
             array_pop($sentmessages)['errormessage']
         );
 
@@ -220,7 +220,7 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
 
         $sentmessage = reset($sentmessages);
 
-        $this->assertEquals(get_string('usercantbemessaged', 'message', fullname($user2)), $sentmessage['errormessage']);
+        $this->assertEquals(get_string('usercantbemessaged', 'message'), $sentmessage['errormessage']);
 
         $this->assertEquals(0, $DB->count_records('messages'));
     }
@@ -256,7 +256,7 @@ class core_message_externallib_testcase extends externallib_advanced_testcase {
 
         $sentmessage = reset($sentmessages);
 
-        $this->assertEquals(get_string('usercantbemessaged', 'message', fullname($user2)), $sentmessage['errormessage']);
+        $this->assertEquals(get_string('usercantbemessaged', 'message'), $sentmessage['errormessage']);
 
         $this->assertEquals(0, $DB->count_records('messages'));
     }
