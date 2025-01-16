@@ -1002,7 +1002,7 @@ class manager {
             $rs->close();
 
             // Delete expired sessions for guest user account, give them larger timeout, there is no security risk here.
-            $params = array('purgebefore' => (time() - $maxlifetime), 'guestid'=>$CFG->siteguest);
+            $params = ['purgebefore' => (time() - $maxlifetime), 'guestid'=>$CFG->siteguest];
             $rs = $DB->get_recordset_select('sessions', 'userid = :guestid AND timemodified < :purgebefore', $params, 'id DESC', 'id, sid');
             foreach ($rs as $session) {
                 self::kill_session($session->sid);
