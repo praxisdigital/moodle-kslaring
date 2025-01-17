@@ -30,7 +30,6 @@ require_once($CFG->libdir . '/badgeslib.php');
 $type       = required_param('type', PARAM_INT);
 $courseid   = optional_param('id', 0, PARAM_INT);
 $page       = optional_param('page', 0, PARAM_INT);
-$deactivate = optional_param('lock', 0, PARAM_INT);
 $sortby     = optional_param('sort', 'name', PARAM_ALPHA);
 $sorthow    = optional_param('dir', 'ASC', PARAM_ALPHA);
 $confirm    = optional_param('confirm', false, PARAM_BOOL);
@@ -138,19 +137,6 @@ if ($delete || $archive) {
         $badge->delete($archiveonly);
         redirect($returnurl);
     }
-}
-
-if ($deactivate && has_capability('moodle/badges:configuredetails', $PAGE->context)) {
-    require_sesskey();
-    $badge = new badge($deactivate);
-    if ($badge->is_locked()) {
-        $badge->set_status(BADGE_STATUS_INACTIVE_LOCKED);
-    } else {
-        $badge->set_status(BADGE_STATUS_INACTIVE);
-    }
-    $msg = 'deactivatesuccess';
-    $returnurl->param('msg', $msg);
-    redirect($returnurl);
 }
 
 echo $OUTPUT->header();
