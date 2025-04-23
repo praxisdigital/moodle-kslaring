@@ -178,6 +178,8 @@
   <library>
     <location>requirejs</location>
     <name>RequireJS</name>
+    <description>RequireJS is a JavaScript file and module loader.</description>
+    <version>2.3.7</version>
     <license>MIT</license>
     <version>2.3.5</version>
     <licenseversion></licenseversion>
