@@ -174,6 +174,7 @@ class core_auth_external_testcase extends externallib_advanced_testcase {
         $this->assertTrue($result['success']);
         $this->assertEmpty($result['warnings']);
 
+        set_config('protectusernames', 0);
         $_SERVER['HTTP_USER_AGENT'] = 'no browser'; // Hack around missing user agent in CLI scripts.
         $this->expectException('moodle_exception');
         $this->expectExceptionMessage('error/invalidlogin');
@@ -197,6 +198,7 @@ class core_auth_external_testcase extends externallib_advanced_testcase {
         $this->assertTrue($result['success']);
         $this->assertEmpty($result['warnings']);
 
+        set_config('protectusernames', 0);
         $_SERVER['HTTP_USER_AGENT'] = 'no browser'; // Hack around missing user agent in CLI scripts.
         $this->expectException('moodle_exception');
         $this->expectExceptionMessage('error/invalidlogin');
@@ -227,7 +229,14 @@ class core_auth_external_testcase extends externallib_advanced_testcase {
         $result = external_api::clean_returnvalue(core_auth_external::confirm_user_returns(), $result);
         $this->assertTrue($result['success']);
 
-        $this->expectException('moodle_exception');
+        // Keep protectusernames enabled so the call returns invalidlogin exception.
+        $this->expectException('\moodle_exception');
+        $this->expectExceptionMessage('error/invalidlogin');
+        core_auth_external::resend_confirmation_email($username, $password);
+
+        // Now disable protectusernames and expect an exception.
+        set_config('protectusernames', 0);
+        $this->expectException('\moodle_exception');
         $this->expectExceptionMessage('error/alreadyconfirmed');
         core_auth_external::resend_confirmation_email($username, $password);
     }
