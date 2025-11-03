@@ -1,6 +1,9 @@
 This files describes API changes in /mod/glossary/*,
 information provided here is intended especially for developers.
 
+=== 4.1.22 ===
+* Function mod_glossary_rating_can_see_item_ratings is now implemented for checking permissions to view ratings.
+
 === 3.8 ===
 * The following functions have been finally deprecated and can not be used anymore:
     * glossary_scale_used()
