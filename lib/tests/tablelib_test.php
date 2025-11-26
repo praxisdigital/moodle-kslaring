@@ -788,4 +788,68 @@ class core_tablelib_testcase extends advanced_testcase {
         ];
     }
 
+    /**
+     * Data test for set and render caption for table.
+     *
+     * @covers ::set_caption_for_table
+     * @covers ::render_caption_for_table
+     */
+    public function test_set_and_render_caption_for_table(): void {
+        $data = $this->generate_data(10, 2);
+        $columns = $this->generate_columns(2);
+        $headers = $this->generate_headers(2);
+        $caption = 'Caption for table';
+        $captionattribute = ['class' => 'inline'];
+        $this->run_table_test(
+            $columns,
+            $headers,
+            // Sortable.
+            true,
+            // Collapsible.
+            false,
+            // Suppress columns.
+            [],
+            // No sorting.
+            [],
+            // Data.
+            $data,
+            // Page size.
+            10,
+            // Caption for table.
+            $caption,
+            // Caption attribute.
+            $captionattribute,
+        );
+        $this->expectOutputRegex('/' . '<caption class="inline">' . $caption . '<\/caption>' . '/');
+    }
+
+    /**
+     * Test formulas are escaped in exported tables.
+     */
+    public function test_table_exports_escaped_formulas(): void {
+        $table = new flexible_table('tablelib_test_export');
+        $table->define_baseurl('/invalid.php');
+        $table->define_columns(['c1', 'c2', 'c3', 'c4', 'c5', 'c6', 'c7', 'c8']);
+
+        ob_start();
+        $table->is_downloadable(true);
+        $table->is_downloading('csv');
+
+        $table->setup();
+        $table->add_data([
+            'column0' => "\t=SUM(1+1)", // With tab.
+            'column1' => "\r=SUM(1+1)", // With carriage return.
+            'column2' => "\n=SUM(1+1)", // With new line.
+            'column3' => "=SUM(1+1)",
+            'column4' => "=1+1",
+            'column5' => "+1+1",
+            'column6' => "-1+1",
+            'column7' => "@A1",
+            'column8' => "-", // Single dash (should not be escaped).
+        ]);
+        $output = ob_get_contents();
+        ob_end_clean();
+
+        $this->assertEquals("\n'=SUM(1+1),'=SUM(1+1),'=SUM(1+1),'=SUM(1+1),'=1+1,'+1+1,'-1+1,'@A1,-\n", substr($output, 3));
+    }
 }
