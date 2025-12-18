@@ -87,9 +87,6 @@ if (!empty($role)) {
     }
 }
 
-$returnurl = new moodle_url('recipients.php', array('id' => $badge->id));
-$returnlink = html_writer::link($returnurl, $strrecipients);
-$actionbar = new \core_badges\output\standard_action_bar($PAGE, $badge->type, false, false, $returnurl);
 $output = $PAGE->get_renderer('core', 'badges');
 
 // Roles that can award this badge.
