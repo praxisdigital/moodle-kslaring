@@ -300,7 +300,7 @@ switch ($action) {
         if (!$file) {
             echo json_encode(false);
         } else {
-            $source = unserialize_object($file->get_source());
+            $source = unserializeq($file->get_source());
             $return = array('filename' => $filename, 'filepath' => $filepath, 'references' => array());
             $browser = get_file_browser();
             if (isset($source->original)) {
