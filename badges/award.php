@@ -77,6 +77,16 @@ if (!$badge->is_active()) {
     die();
 }
 
+if (!empty($role)) {
+    if (!user_has_role_assignment($USER->id, $role, $context->id) && !$isadmin) {
+        // User does not have the role passed by the parameter.
+        echo $OUTPUT->header();
+        echo $OUTPUT->notification(get_string('wrongrole', 'badges'));
+        echo $OUTPUT->footer();
+        die();
+    }
+}
+
 $output = $PAGE->get_renderer('core', 'badges');
 
 // Roles that can award this badge.
