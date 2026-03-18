@@ -2525,7 +2525,7 @@ abstract class repository implements cacheable_object {
         if ($file = $fs->get_file($user_context->id, 'user', 'draft', $itemid, $filepath, $filename)) {
             if ($tempfile = $fs->get_file($user_context->id, 'user', 'draft', $itemid, $newfilepath, $newfilename)) {
                 // Remember original file source field.
-                $source = @unserialize($file->get_source());
+                $source = unserialize_object($file->get_source());
                 // Remember the original sortorder.
                 $sortorder = $file->get_sortorder();
                 if ($tempfile->is_external_file()) {
@@ -2540,9 +2540,7 @@ abstract class repository implements cacheable_object {
                 $newfile = $fs->create_file_from_storedfile(array('filepath'=>$filepath, 'filename'=>$filename), $tempfile);
                 // Preserve original file location (stored in source field) for handling references
                 if (isset($source->original)) {
-                    if (!($newfilesource = @unserialize($newfile->get_source()))) {
-                        $newfilesource = new stdClass();
-                    }
+                    $newfilesource = unserialize_object($newfile->get_source());
                     $newfilesource->original = $source->original;
                     $newfile->set_source(serialize($newfilesource));
                 }
@@ -2591,7 +2589,10 @@ abstract class repository implements cacheable_object {
                 if ($fs->file_exists($usercontext->id, 'user', 'draft', $draftid, $updatedata['filepath'], $updatedata['filename'])) {
                     throw new moodle_exception('fileexists', 'repository');
                 }
-                if (($filesource = @unserialize($file->get_source())) && isset($filesource->original)) {
+
+                // Unset original so the references are not shown any more.
+                $filesource = unserialize_object($file->get_source());
+                if (isset($filesource->original)) {
                     unset($filesource->original);
                     $file->set_source(serialize($filesource));
                 }
@@ -2637,8 +2638,10 @@ abstract class repository implements cacheable_object {
             foreach ($files as $f) {
                 if (preg_match("|^$xfilepath|", $f->get_filepath())) {
                     $path = preg_replace("|^$xfilepath|", $updatedata['filepath'], $f->get_filepath());
-                    if (($filesource = @unserialize($f->get_source())) && isset($filesource->original)) {
-                        // unset original so the references are not shown any more
+
+                    // Unset original so the references are not shown any more.
+                    $filesource = unserialize_object($f->get_source());
+                    if (isset($filesource->original)) {
                         unset($filesource->original);
                         $f->set_source(serialize($filesource));
                     }
